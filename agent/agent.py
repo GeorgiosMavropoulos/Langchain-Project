@@ -19,9 +19,10 @@ class Agent:
     )
 
      #create prompt template's fromat
-     self.prompt = prompt_templates.prompt_template.format(text='segovia_aqueduct_text',
-    num_words=20, 
-    tone="knowledgeable and engaging")
+     self.prompt = prompt_templates.prompt_template.format(Instruction='write a summary for the following text',num_words = 30,
+                                                           
+    Question ='ome PCs from the 1980s were iconic pioneers of personal computing. Computers like the Apple II, IBM PC, and Commodore 64 revolutionized how we lived and worked. They introduced us to word processing, gaming, and the possibilities of home computing. The graphical user interface, as seen in the Apple Macintosh, changed the way we interacted with machines. These PCs, though less powerful by today’s standards, ignited a digital revolution, shaping the technology landscape we know today. They hold a special place in history, symbolizing the dawn of a new era in computing that laid the foundation for the modern digital age.' 
+    )
      
     def call_agent(self):
         #validate that the model is activate
