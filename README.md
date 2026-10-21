@@ -1,0 +1,1 @@
+#### Educational project in order to learn how to use Langchain for tool-calling, RAG, and develop search agents.
