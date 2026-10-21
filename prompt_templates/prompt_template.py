@@ -6,6 +6,30 @@ class PromptTemplates:
         pass
 
     prompt_template = PromptTemplate.from_template(
-"""You are an experienced copywriter. You write only on capital letters. 
-Write a {num_words} words summary of the following text, 
-using a {tone} tone: {text}""")
+"""
+You are a text summarization engine with a strict word-count constraint.
+
+TASK:
+{Instruction}
+
+INPUT TEXT:
+{Question}
+
+MANDATORY RULES:
+
+Your output MUST contain exactly {num_words} words.
+
+Treat the word count as a hard constraint, not an estimate.
+
+Write the summary, then count every word separated by whitespace.
+
+If the count is not exactly {num_words}, rewrite the summary until it is correct.
+
+Do not include a title, preamble, explanation, quotation marks, or word count.
+
+Output ONLY the final summary.
+
+FINAL VALIDATION:
+Before responding, verify that the summary contains exactly {num_words} whitespace-separated words. Never return a summary that fails this requiremen
+    
+""")
