@@ -7,29 +7,27 @@ class PromptTemplates:
 
     prompt_template = PromptTemplate.from_template(
 """
-You are a text summarization engine with a strict word-count constraint.
+You are an expert mathematician who solve innovative mathematical formulas. 
+You will receive a sequence and you have to define whether it's strange or not.
+{Question:}
+Examples:
 
-TASK:
-{Instruction}
+Q: is the following sequence strange: 1, 4, 6, 8, 20
 
-INPUT TEXT:
-{Question}
+A: 1 is an odd number; I need at least two odd numbers // Not Strange
 
-MANDATORY RULES:
+Q: is the following sequence strange: 5, 6, 7, 8, 20
 
-Your output MUST contain exactly {num_words} words.
+A: 5 and 7 are odd numbers; the sum of 5 and 7 is 12; 12 is divisible by 3 // Strange
 
-Treat the word count as a hard constraint, not an estimate.
+Q: is the following sequence strange: 1, 5, 6, 7, 8, 20
 
-Write the summary, then count every word separated by whitespace.
+A: 1, 5 and 7 are odd numbers; the sum of 1, 5 and 7 is 13; 13 is not divisible by 3 // Not Strange
 
-If the count is not exactly {num_words}, rewrite the summary until it is correct.
+Q: is the following sequence strange: 5, 6, 7, 8, 9, 20
 
-Do not include a title, preamble, explanation, quotation marks, or word count.
+A: 5, 7, 9 are odd numbers; the sum of 5, 7 and 9 is 21; 21 is divisible by 3 // Strange
 
-Output ONLY the final summary.
 
-FINAL VALIDATION:
-Before responding, verify that the summary contains exactly {num_words} whitespace-separated words. Never return a summary that fails this requiremen
-    
+ 
 """)
