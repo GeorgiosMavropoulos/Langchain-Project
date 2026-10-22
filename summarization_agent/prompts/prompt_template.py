@@ -6,65 +6,44 @@ class Prompt_Temps:
         pass
 
     ASSISTANT_SELECTION_INSTRUCTIONS = """
-You are skilled at assigning a research question to the correct 
-research assistant. 
-There are various research assistants available, each specialized
-in an area of expertise. 
-Each assistant is identified by a specific type. Each assistant
-has specific instructions to undertake 
-the research.   #1
+You are skilled at assigning a research question to the correct research assistant. 
+There are various research assistants available, each specialized in an area of expertise. 
 
-How to select the correct assistant: you must select the 
-relevant assistant depending on the topic of the question, 
-which should match the area of expertise of the assistant.
+How to select the correct assistant: select the relevant assistant depending on the topic of the question.
 
 ------
-Here are some examples on how to return the correct assistant
-information, depending on the question asked.
+Here are some examples on how to return the correct assistant information.
 
 Examples:
 Question: "Should I invest in Apple stocks?"
 Response: 
 {{
     "assistant_type": "Financial analyst assistant",
-    "assistant_instructions": "You are a seasoned finance
-analyst AI assistant. Your primary goal is to compose 
-comprehensive, astute, impartial, and methodically arranged
-financial reports based on provided data and trends.",
-    "user_question": "{user_question}"
+    "assistant_instructions": "You are a seasoned finance analyst AI assistant. Your primary goal is to compose comprehensive, astute, impartial, and methodically arranged financial reports based on provided data and trends.",
+    "user_question": "Should I invest in Apple stocks?"
 }}
+
 Question: "what are the most interesting sites in Tel Aviv?"
 Response: 
 {{
     "assistant_type": "Tour guide assistant",
-    "assistant_instructions": "You are a world-travelled
-AI tour guide assistant. Your main purpose is to draft
-engaging, insightful, unbiased, and well-structured 
-travel reports on given locations, including history, 
-attractions, 
-and cultural insights.",
-    "user_question": "{user_question}"
+    "assistant_instructions": "You are a world-travelled AI tour guide assistant. Your main purpose is to draft engaging, insightful, unbiased, and well-structured travel reports on given locations, including history, attractions, and cultural insights.",
+    "user_question": "what are the most interesting sites in Tel Aviv?"
 }}
 
 Question: "Is Messi a good soccer player?"
 Response: 
 {{
     "assistant_type": "Sport expert assistant",
-    "assistant_instructions": "You are an experienced AI
-sport assistant. Your main purpose is to draft engaging,
-insightful, unbiased, and well-structured sport reports on 
-given sport personalities, or sport events, including 
-factual details, statistics and insights.",
-    "user_question": "{user_question}"
+    "assistant_instructions": "You are an experienced AI sport assistant. Your main purpose is to draft engaging, insightful, unbiased, and well-structured sport reports on given sport personalities, or sport events, including factual details, statistics and insights.",
+    "user_question": "Is Messi a good soccer player?"
 }}
 
 ------
-Now that you have understood all the above, select the
-correct research assistant for the following question.
+Now that you have understood all the above, select the correct research assistant for the following question.
 Question: {user_question}
 Response:
-
-""" 
+"""
 
     ASSISTANT_SELECTION_PROMPT_TEMPLATE = PromptTemplate.from_template( 
     template=ASSISTANT_SELECTION_INSTRUCTIONS
@@ -138,7 +117,10 @@ conclusions.
 Write all used source urls at the end of the report, and make sure 
 to not add duplicated sources, but only one reference for each.
 You must write the report in apa format.
-Please do your best, this is very important to my career.""" 
+Please do your best, this is very important to my career.
+Do not exceed the 500 words
+
+""" 
 
     RESEARCH_REPORT_PROMPT_TEMPLATE = PromptTemplate.from_template(
     template=RESEARCH_REPORT_INSTRUCTIONS)
