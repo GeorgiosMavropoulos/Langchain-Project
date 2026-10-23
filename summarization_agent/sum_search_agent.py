@@ -1,31 +1,20 @@
-from langchain_openai import ChatOpenAI
 import openai
-import os
-from dotenv import load_dotenv
-load_dotenv()
 from .web_search_mod.web_search import WebSearch
 from .web_scrap.web_scraper import WebScrapper
 from .utilities.utilities import to_obj
 from .prompts.prompt_template import Prompt_Temps
+from .llm.llm_instance import LLM
+
+llm_obj =  LLM()
 web_search = WebSearch()
 prompt_templates = Prompt_Temps()
 web_scrap = WebScrapper()
 class SummarizationSearchAgent:
     def __init__(self):
-        self.GEMINI_MODEL = os.getenv('GEMINI_MODEL')
-        self.GEMINI_API_URL = os.getenv('GEMINI_API_URL')
-        self.GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+        self.llm = llm_obj.get_llm()
         self.NUM_SEARCH_QUERIES = 2
         self.NUM_SEARCH_RESULTS_PER_QUERY = 2
         self.RESULT_TEXT_MAX_CHARACTERS = 5000
-
-        #initialize the model
-        self.llm = ChatOpenAI(
-            model=self.GEMINI_MODEL,
-            base_url=self.GEMINI_API_URL,  
-            api_key=self.GEMINI_API_KEY,      
-            temperature=0.6,
-        )
 
     #function to get user's answer
     def get_user_input(self):
@@ -50,7 +39,7 @@ class SummarizationSearchAgent:
 
              #send the prompt to the router model so it can pick the right assistant
              router_result = self.llm.invoke(router_template_prompt)
-             print(router_result)
+             
 
              #convert the assistant's json result into py dictionary
              formated_assistant_result = to_obj(router_result.content)
