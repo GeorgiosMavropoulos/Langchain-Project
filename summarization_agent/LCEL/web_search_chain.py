@@ -36,6 +36,8 @@ assistant_instrction_dict = {
     )
 }
 
-web_query_results = web_query_chain.invoke(assistant_instrction_dict) #execute the web query
-print(web_query_results)
+#execute the web query
+web_results = web_query_chain.invoke(assistant_instrction_dict)
+print(web_results)
+
 

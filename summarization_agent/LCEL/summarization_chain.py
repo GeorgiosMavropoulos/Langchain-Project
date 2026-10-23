@@ -16,7 +16,7 @@ RESULT_TEXT_MAX_CHARACTERS = 10000
 # Then it runs paraller the summarization process to summarize all given texts
 # Finaly it passes the output (result url and text summary with user's questions to the lambda runner)
 search_result_text_and_summary_chain = (
-    RunnableLambda(lambda x:
+    RunnableLambda(lambda x, **kwargs:
         {
             'search_result_text': 
                 web_scrapper.web_scraping(url=x['result_url'])[
@@ -53,6 +53,6 @@ result_url_str = '{"result_url":"https://citiesandattractions.com/spain/astorga-
 #convert the string to a dictionary
 result_url_dict = to_obj(result_url_str)
 #execute the function and delegate the response into a new variable
-text_summary = search_result_text_and_summary_chain.invoke(result_url_dict)
-#print the response
-print(text_summary)
+
+result_text = search_result_text_and_summary_chain.invoke(result_url_dict)
+print(result_text)
