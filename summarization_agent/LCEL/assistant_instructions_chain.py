@@ -24,7 +24,9 @@ assistant_instructions_chain = ({'user_question': RunnablePassthrough()}
 #test if chain works
 question = 'What can I see and do in the Spanish town of Astorga?'
 
-assistant_instructor = assistant_instructions_chain.invoke(question)
-print(assistant_instructor)
+
+instructions = assistant_instructions_chain.invoke(question)
+print(instructions)
+
 
 
