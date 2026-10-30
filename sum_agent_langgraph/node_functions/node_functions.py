@@ -6,10 +6,10 @@
    they evaluate search relevance
    and they compose the final report
 """
-from ..prompt_templates.prompt_template import PromptTemplates
+from ..prompts.prompt_template import Prompt_Temps
 from ..llm.llm_instance import LLM
 #initialize an object of prompt templates
-prompt_temps = PromptTemplates()
+prompt_temps = Prompt_Temps()
 llm_client = LLM()
 
 import json
@@ -21,6 +21,11 @@ def _parse_assistant_info(content:str)->str:
 #helper method to parse web queries into json format
 def _parse_web_queries(queries:str)->str:
     return json.loads(queries)
+
+
+#helper method to parse summary into json format
+def _parse_summary(summary:str)->str:
+    return json.loads(summary)
 
 class Nodes:
     def __init__(self):
@@ -61,3 +66,23 @@ class Nodes:
             response.content)  #4
 
         return {"search_queries": search_queries}  
+
+
+    def generate_summary(state:dict)->dict:
+      """Generate summary based on the given text"""
+
+      #generated queries
+      generated_text= state['search_result_text'] 
+      user_question = state['search_query']
+
+      prompt= prompt_temps.SUMMARY_PROMPT_TEMPLATE.format(text = generated_text['search_result_text'],
+                                                          user_question= user_question
+                                                          )
+
+      #get LLMs response
+      respone = llm_client.get_llm().invoke(prompt)
+
+      #parse LLM's response
+      summary = _parse_summary(respone.content)
+
+      return {"summary":summary}
