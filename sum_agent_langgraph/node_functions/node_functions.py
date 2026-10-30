@@ -8,9 +8,11 @@
 """
 from ..prompts.prompt_template import Prompt_Temps
 from ..llm.llm_instance import LLM
+from ..web_scrap.web_scraper import WebScrapper
 #initialize an object of prompt templates
 prompt_temps = Prompt_Temps()
 llm_client = LLM()
+web_scrap = WebScrapper()
 
 import json
 #helper method to parse info into json format
@@ -23,9 +25,6 @@ def _parse_web_queries(queries:str)->str:
     return json.loads(queries)
 
 
-#helper method to parse summary into json format
-def _parse_summary(summary:str)->str:
-    return json.loads(summary)
 
 class Nodes:
     def __init__(self):
@@ -68,21 +67,31 @@ class Nodes:
         return {"search_queries": search_queries}  
 
 
+    def scrap_web(state:dict)->dict:
+        """Scrap the web to retrieve text"""
+        queries = state['search_queries']
+
+        scraped_text = web_scrap.web_scraping(queries)
+
+        return {
+        "search_result_text": scraped_text
+    }
+
+    
+
     def generate_summary(state:dict)->dict:
       """Generate summary based on the given text"""
 
       #generated queries
       generated_text= state['search_result_text'] 
-      user_question = state['search_query']
+      user_question = state['user_question']
 
-      prompt= prompt_temps.SUMMARY_PROMPT_TEMPLATE.format(text = generated_text['search_result_text'],
+      prompt= prompt_temps.SUMMARY_PROMPT_TEMPLATE.format(text = generated_text,
                                                           user_question= user_question
                                                           )
 
       #get LLMs response
-      respone = llm_client.get_llm().invoke(prompt)
+      response = llm_client.get_llm().invoke(prompt)
 
-      #parse LLM's response
-      summary = _parse_summary(respone.content)
 
-      return {"summary":summary}
+      return {"summary":response.contentry}
