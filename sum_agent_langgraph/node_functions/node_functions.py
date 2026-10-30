@@ -82,7 +82,7 @@ class Nodes:
     def generate_summary(state:dict)->dict:
       """Generate summary based on the given text"""
 
-      #generated queries
+      
       generated_text= state['search_result_text'] 
       user_question = state['user_question']
 
@@ -94,4 +94,21 @@ class Nodes:
       response = llm_client.get_llm().invoke(prompt)
 
 
-      return {"summary":response.contentry}
+      return {"research_summary":response.content}
+
+
+    def research_report(state:dict) -> dict:
+        """Generate  report based on the given summary"""
+
+        #summary
+        summary = state['research_summary']
+        user_question = state['user_question']
+
+        #pass the prompt
+        prompt = prompt_temps.RESEARCH_REPORT_PROMPT_TEMPLATE.format(research_summary =summary,user_question=user_question)
+
+        #get LLM's response
+        response = llm_client.get_llm().invoke(prompt)
+
+        #return the report
+        return {'report':response.content}
