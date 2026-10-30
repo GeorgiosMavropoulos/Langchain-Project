@@ -9,10 +9,12 @@
 from ..prompts.prompt_template import Prompt_Temps
 from ..llm.llm_instance import LLM
 from ..web_scrap.web_scraper import WebScrapper
+from ..web_search_mod.web_search import WebSearch
 #initialize an object of prompt templates
 prompt_temps = Prompt_Temps()
 llm_client = LLM()
 web_scrap = WebScrapper()
+web_search = WebSearch()
 
 import json
 #helper method to parse info into json format
@@ -67,11 +69,22 @@ class Nodes:
         return {"search_queries": search_queries}  
 
 
+    #search the web using the seach queries
+    def search_web(state:dict)->dict:
+        """Search the web with the given quries to retrieve relevant urls"""
+        queries = state['search_queries'] #get the search queries from the previous node
+        max_results = 5 #force max 5 results
+
+        #retrieve the urls using the web_search function
+        retrieved_urls = web_search.web_search(queries,max_results)
+
+        return {'urls':retrieved_urls}
+
     def scrap_web(state:dict)->dict:
         """Scrap the web to retrieve text"""
-        queries = state['search_queries']
+        urls = state['urls']
 
-        scraped_text = web_scrap.web_scraping(queries)
+        scraped_text = web_scrap.web_scraping(urls)
 
         return {
         "search_result_text": scraped_text
