@@ -62,7 +62,7 @@ class ResearchState(TypedDict):  #2
     search_queries: Optional[List[SearchQuery]]
     search_results: Optional[List[SearchResult]]
     search_summaries: Optional[List[SearchSummary]]
-    research_summary: Optional[str]
+    search_result_text: Optional[str]
     final_report: Optional[str]
     used_fallback_search: Optional[bool]
     relevance_evaluation: Optional[Dict[str, Any]]

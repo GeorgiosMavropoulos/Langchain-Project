@@ -1,7 +1,7 @@
 """Creates the nodes and the edges to run the agent"""
-from ..node_functions.node_functions import Nodes
+from node_functions.node_functions import Nodes
 from langgraph.graph import StateGraph, END
-from ..type_dicts.type_dict import ResearchState
+from type_dicts.type_dict import ResearchState
 
 nodes = Nodes()
 
@@ -56,5 +56,9 @@ class Agent:
 
 
 
-    
+    def compile_graph(self):
+
+        self.app = self.graph.compile()
+
+        return self.app
 

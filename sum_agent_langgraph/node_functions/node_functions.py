@@ -6,10 +6,10 @@
    they evaluate search relevance
    and they compose the final report
 """
-from ..prompts.prompt_template import Prompt_Temps
-from ..llm.llm_instance import LLM
-from ..web_scrap.web_scraper import WebScrapper
-from ..web_search_mod.web_search import WebSearch
+from prompts.prompt_template import Prompt_Temps
+from llm.llm_instance import LLM
+from web_scrap.web_scraper import WebScrapper
+from web_search_mod.web_search import WebSearch
 #initialize an object of prompt templates
 prompt_temps = Prompt_Temps()
 llm_client = LLM()
@@ -33,7 +33,7 @@ class Nodes:
         pass
 
 
-    def select_assistant(state: dict) -> dict:
+    def select_assistant(self,state: dict) -> dict:
         """Select the appropriate research assistant."""
         user_question = state["user_question"]
 
@@ -51,7 +51,7 @@ class Nodes:
 
 
     
-    def generate_search_queries(state: dict) -> dict:
+    def generate_search_queries(self,state: dict) -> dict:
         """Generate search queries based on the question."""
         assistant_info = state["assistant_info"]
         user_question = state["user_question"]
@@ -70,19 +70,37 @@ class Nodes:
 
 
     #search the web using the seach queries
-    def search_web(state:dict)->dict:
+    def search_web(self,state:dict)->dict:
         """Search the web with the given quries to retrieve relevant urls"""
         queries = state['search_queries'] #get the search queries from the previous node
         max_results = 5 #force max 5 results
 
         #retrieve the urls using the web_search function
-        retrieved_urls = web_search.web_search(queries,max_results)
+        retrieved_urls = []
 
-        return {'urls':retrieved_urls}
+        for query in queries:
 
-    def scrap_web(state:dict)->dict:
+            # if query is dict
+            if isinstance(query, dict):
+                query = list(query.values())[0]
+
+           
+            urls = web_search.web_search([query], max_results)
+            for url in urls:
+                if "wt.wikipedia.org" in url:
+                    url = url.replace(
+                        "wt.wikipedia.org",
+                        "www.wikipedia.org"
+                    )
+            
+
+            retrieved_urls.extend(urls)
+
+        return {'urls': retrieved_urls}
+
+    def scrap_web(self,state:dict)->dict:
         """Scrap the web to retrieve text"""
-        urls = state['urls']
+        urls = state['search_results']
 
         scraped_text = web_scrap.web_scraping(urls)
 
@@ -92,14 +110,14 @@ class Nodes:
 
     
 
-    def generate_summary(state:dict)->dict:
+    def generate_summary(self,state:dict)->dict:
       """Generate summary based on the given text"""
 
       
-      generated_text= state['search_result_text'] 
+      search_result_text= state['search_result_text'] 
       user_question = state['user_question']
 
-      prompt= prompt_temps.SUMMARY_PROMPT_TEMPLATE.format(text = generated_text,
+      prompt= prompt_temps.SUMMARY_PROMPT_TEMPLATE.format(text = search_result_text,
                                                           user_question= user_question
                                                           )
 
@@ -110,7 +128,7 @@ class Nodes:
       return {"research_summary":response.content}
 
 
-    def research_report(state:dict) -> dict:
+    def research_report(self,state:dict) -> dict:
         """Generate  report based on the given summary"""
 
         #summary
