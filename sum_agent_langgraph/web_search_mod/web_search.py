@@ -4,11 +4,18 @@ from typing import List
 
 class WebSearch:
     def __init__(self):
-        pass
+        self.search = DuckDuckGoSearchAPIWrapper()
+
     #create the web search method
-    def web_search(self,query:str, max_results:int)->list[str]:
-        return [r["link"]  #return links
-                #iterate through the results
-            for r in DuckDuckGoSearchAPIWrapper().results(query,max_results)]
+    def web_search(self,query:List[str], max_results:int)->List[str]:
+        all_links = []
+        #loop through each query and return a list
+        for q in query:
+            results = self.search.results(q, max_results)
+
+            for result in results:
+                all_links.append(result["link"])
+
+        return all_links
 
 
